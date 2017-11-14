@@ -21,24 +21,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Autowired
     private MessageSource messages;
 
-    public RestResponseEntityExceptionHandler() {
-        super();
-    }
-
-    // API
-    public ResponseEntity<Object> handleCreatedResponse(Object object) {
-        logger.info("201 Status Code Created");
-        return new ResponseEntity<Object>(object, new HttpHeaders(), HttpStatus.CREATED);
-    }
-
     // 400
+    @ExceptionHandler({ ExceptionMessage.class })
     public ResponseEntity<Object> handleBindException(final Exception exception, final WebRequest request) {
         logger.error("400 Status Code", exception);
         final GenericResponse bodyOfResponse = new GenericResponse("handleBindException ", "Invalid" + exception.getMessage());
+        System.out.println(bodyOfResponse);
         return handleExceptionInternal(exception, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     //405
+    @ExceptionHandler({ ExceptionMessage.class })
     public ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
         logger.error("405 Status Code", ex);
         final BindingResult result = ex.getBindingResult();
@@ -46,9 +39,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED, request);
     }
 
+    //409
+    @ExceptionHandler({ ExceptionMessage.class })
     public ResponseEntity<Object> handleAlreadyExist(final RuntimeException ex, final WebRequest request) {
         logger.error("409 Status Code", ex);
-        final GenericResponse bodyOfResponse = new GenericResponse(messages.getMessage("message.regError", null, request.getLocale()), "AlreadyExist");
+        final GenericResponse bodyOfResponse = new GenericResponse("AlreadyExist", "found in table");
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 //    @ExceptionHandler({ ExceptionMessage.class })

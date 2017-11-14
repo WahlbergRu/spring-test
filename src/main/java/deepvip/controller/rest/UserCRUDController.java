@@ -36,9 +36,11 @@ public class UserCRUDController {
 
 
     public UserCRUDController(UserService userService,
-                              BCryptPasswordEncoder bCryptPasswordEncoder) {
+                              BCryptPasswordEncoder bCryptPasswordEncoder,
+                              RestResponseEntityExceptionHandler restResponseEntityExceptionHandler) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.restResponseEntityExceptionHandler = restResponseEntityExceptionHandler;
     }
 
     //-------------------Retrieve All Users--------------------------------------------------------
@@ -72,12 +74,10 @@ public class UserCRUDController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Object> createUser(@RequestBody User user, WebRequest webRequest) {
-        System.out.println("Creating User "  + user.getName());
-
         if (userService.isUserExist(user)) {
-            System.out.println("A User with name " + user.getName() + " already exist");
+            System.out.println("A User with name " + user.getLogin() + " already exist");
             return restResponseEntityExceptionHandler.handleAlreadyExist(
-                new ExceptionMessage("A User with name " + user.getName() + " already exist"),
+                new ExceptionMessage("A User with name " + user.getLogin() + " already exist"),
                     webRequest
             );
         }
@@ -86,9 +86,10 @@ public class UserCRUDController {
 
         try {
             userService.saveUser(user);
-            return restResponseEntityExceptionHandler.handleCreatedResponse(user);
+            return new ResponseEntity<Object>(user, new HttpHeaders(), HttpStatus.CREATED);
         }
         catch (Exception exception){
+            System.out.println(exception);
             return restResponseEntityExceptionHandler.handleBindException(exception, webRequest);
         }
 
@@ -109,8 +110,10 @@ public class UserCRUDController {
         }
 
         currentUser.setName(user.getName());
-        currentUser.setAge(user.getAge());
-        currentUser.setSalary(user.getSalary());
+        currentUser.setLastName(user.getLastName());
+        currentUser.setEmail(user.getEmail());
+        currentUser.setPassword(user.getPassword());
+        currentUser.setAffilation(user.getAffilation());
 
         userService.updateUser(currentUser);
         return new ResponseEntity<User>(currentUser, HttpStatus.OK);
@@ -132,15 +135,5 @@ public class UserCRUDController {
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
 
-
-    //------------------- Delete All Users --------------------------------------------------------
-
-    @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteAllUsers() {
-        System.out.println("Deleting All Users");
-
-        userService.deleteAllUsers();
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-    }
 
 }

@@ -12,28 +12,34 @@ public class User {
     private long id;
 
     @Column(unique = true)
+    private String login;
+
+    @Column
     private String name;
 
     @Column
-    private int age;
+    private String lastName;
 
     @Column
-    private double salary;
+    private String email;
 
     @Column
     private String password;
 
+    @Column
+    private String affilation;
 
     public User(){
         id=0;
     }
 
-    public User(long id, String name, int age, double salary){
+    public User(long id, String login, String name, String lastName, String email, String affilation){
         this.id = id;
+        this.login = login;
         this.name = name;
-        this.age = age;
-        this.salary = salary;
-
+        this.lastName = lastName;
+        this.email = email;
+        this.affilation = affilation;
     }
 
     public long getId() {
@@ -52,21 +58,38 @@ public class User {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public String getLogin() {
+        return login;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    public double getSalary() {
-        return salary;
+    public String getLastName() {
+        return this.lastName;
     }
 
-    public void setSalary(double salary) {
-        this.salary = salary;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAffilation() {
+        return this.affilation;
+    }
+
+    public void setAffilation(String affilation) {
+        this.affilation = affilation;
+    }
+
 
 
     public String getPassword() {
@@ -97,12 +120,6 @@ public class User {
         if (id != other.id)
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", name=" + name + ", age=" + age
-                + ", salary=" + salary + "]";
     }
 
 

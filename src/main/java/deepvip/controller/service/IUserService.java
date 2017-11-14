@@ -18,7 +18,5 @@ public interface IUserService {
 
     List<User> findAllUsers();
 
-    void deleteAllUsers();
-
-    public boolean isUserExist(User user);
+    boolean isUserExist(User user);
 }
