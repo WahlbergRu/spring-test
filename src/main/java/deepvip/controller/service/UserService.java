@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import deepvip.model.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,10 +54,10 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User saveUser(User user) {
+    public void saveUser(User user) {
         user.setId(counter.incrementAndGet());
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -70,7 +68,6 @@ public class UserService implements IUserService{
 
     @Override
     public void deleteUserById(long id) {
-
         for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
             User user = iterator.next();
             if (user.getId() == id) {

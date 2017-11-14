@@ -1,5 +1,7 @@
 package deepvip.controller.rest;
 
+import deepvip.controller.exceptions.ExceptionMessage;
+import deepvip.controller.exceptions.RestResponseEntityExceptionHandler;
 import deepvip.model.User;
 import deepvip.controller.service.UserService;
 import org.slf4j.Logger;
@@ -12,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -21,14 +26,14 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserCRUDController {
 
-    /**Logger for debug.*/
-    @Autowired
-    private static final Logger logger = LoggerFactory.getLogger(UserCRUDController.class);
 
     @Autowired
-    UserService userService;  //Service which will do all data retrieval/manipulation work
+    UserService userService;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private RestResponseEntityExceptionHandler restResponseEntityExceptionHandler;
+
 
     public UserCRUDController(UserService userService,
                               BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -66,27 +71,25 @@ public class UserCRUDController {
     //-------------------Create a User--------------------------------------------------------
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<User> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
-        System.out.println("Creating User " + user.getName());
+    public ResponseEntity<Object> createUser(@RequestBody User user, WebRequest webRequest) {
+        System.out.println("Creating User "  + user.getName());
 
         if (userService.isUserExist(user)) {
             System.out.println("A User with name " + user.getName() + " already exist");
-            return new ResponseEntity<String>("test", HttpStatus.CONFLICT);
+            return restResponseEntityExceptionHandler.handleAlreadyExist(
+                new ExceptionMessage("A User with name " + user.getName() + " already exist"),
+                    webRequest
+            );
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         try {
             userService.saveUser(user);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(user.getId()).toUri());
-            return new ResponseEntity<User>(user, headers, HttpStatus.CREATED);
+            return restResponseEntityExceptionHandler.handleCreatedResponse(user);
         }
         catch (Exception exception){
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(user.getId()).toUri());
-            logger.info("saveUser ${exception}", exception);
-            return new ResponseEntity<User>(user, headers, HttpStatus.FORBIDDEN);
+            return restResponseEntityExceptionHandler.handleBindException(exception, webRequest);
         }
 
     }

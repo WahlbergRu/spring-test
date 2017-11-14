@@ -10,7 +10,7 @@ public interface IUserService {
 
     User findByName(String name);
 
-    User saveUser(User user);
+    void saveUser(User user);
 
     void updateUser(User user);
 

@@ -86,7 +86,7 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>4.2.3.RELEASE</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -106,6 +106,7 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1206-jdbc42</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
