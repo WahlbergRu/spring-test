@@ -3,64 +3,82 @@ package deepvip.controller.service;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import deepvip.model.UserRepository;
+import deepvip.model.ApplicationUser;
+import deepvip.model.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import deepvip.model.User;
+import static java.util.Collections.emptyList;
 
 @Service("userService")
 @Transactional
-public class UserService implements IUserService{
+public class UserService implements UserDetailsService {
 
-    UserService(){    }
+    @Autowired
+    private ApplicationUserRepository applicationUserRepository;
+
+    UserService(ApplicationUserRepository applicationUserRepository){
+        this.applicationUserRepository = applicationUserRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        ApplicationUser applicationUser = applicationUserRepository.findByLogin(login);
+
+
+
+        if (applicationUser == null) {
+            throw new UsernameNotFoundException(login);
+        }
+        return new User(applicationUser.getLogin(), applicationUser.getPassword(), emptyList());
+    }
 
     private static final AtomicLong counter = new AtomicLong();
 
-    @Autowired
-    private UserRepository userRepository;
 
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<ApplicationUser> findAllUsers() {
+        return applicationUserRepository.findAll();
     }
 
-    @Override
-    public User findById(long id) {
-        return userRepository.findOne(id);
+    public ApplicationUser findById(long id) {
+        return applicationUserRepository.findOne(id);
     }
 
-    @Override
-    public User findByName(String name) {
-        return userRepository.findByName(name);
+    public ApplicationUser findByName(String name) {
+        return applicationUserRepository.findByName(name);
     }
 
-    @Override
-    public void saveUser(User user) {
-        user.setId(counter.incrementAndGet());
-        userRepository.save(user);
+    public ApplicationUser findByLogin(String login) {
+        return applicationUserRepository.findByLogin(login);
     }
 
-    @Override
-    public void updateUser(User user) {
-//        int index = users.indexOf(user);
-//        users.set(index, user);
+    public void saveUser(ApplicationUser applicationUser) {
+        applicationUser.setId(counter.incrementAndGet());
+        applicationUserRepository.save(applicationUser);
     }
 
-    @Override
+    public void updateUser(ApplicationUser applicationUser) {
+//        int index = users.indexOf(applicationUser);
+//        users.set(index, applicationUser);
+    }
+
     public void deleteUserById(long id) {
-//        for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
-//            User user = iterator.next();
+//        for (Iterator<ApplicationUser> iterator = users.iterator(); iterator.hasNext(); ) {
+//            ApplicationUser user = iterator.next();
 //            if (user.getId() == id) {
 //                iterator.remove();
 //            }
 //        }
     }
 
-    @Override
-    public boolean isUserExist(User user) {
-        return findByName(user.getName())!=null;
+    public boolean isUserExist(ApplicationUser applicationUser) {
+        return findByLogin(applicationUser.getLogin())!=null;
     }
 
 }

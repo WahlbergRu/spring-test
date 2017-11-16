@@ -1,16 +1,13 @@
 package deepvip.controller.exceptions;
 
-import deepvip.model.User;
 import deepvip.util.GenericResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -25,7 +22,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler({ ExceptionMessage.class })
     public ResponseEntity<Object> handleBindException(final Exception exception, final WebRequest request) {
         logger.error("400 Status Code", exception);
-        final GenericResponse bodyOfResponse = new GenericResponse("handleBindException ", "Invalid" + exception.getMessage());
+        final GenericResponse bodyOfResponse = new GenericResponse("handle Bind Exception", exception.getMessage());
         System.out.println(bodyOfResponse);
         return handleExceptionInternal(exception, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }

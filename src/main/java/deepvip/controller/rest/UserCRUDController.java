@@ -2,11 +2,11 @@ package deepvip.controller.rest;
 
 import deepvip.controller.exceptions.ExceptionMessage;
 import deepvip.controller.exceptions.RestResponseEntityExceptionHandler;
-import deepvip.model.User;
+import deepvip.controller.security.SecurityConstants;
+import deepvip.model.ApplicationUser;
 import deepvip.controller.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,12 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,7 +32,6 @@ public class UserCRUDController {
 
     private RestResponseEntityExceptionHandler restResponseEntityExceptionHandler;
 
-
     public UserCRUDController(UserService userService,
                               BCryptPasswordEncoder bCryptPasswordEncoder,
                               RestResponseEntityExceptionHandler restResponseEntityExceptionHandler) {
@@ -45,48 +42,56 @@ public class UserCRUDController {
 
     //-------------------Retrieve All Users--------------------------------------------------------
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<List<User>> listAllUsers() {
-        List<User> users = userService.findAllUsers();
-        if(users.isEmpty()){
-            return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<ApplicationUser>> listAllUsers() {
+        List<ApplicationUser> applicationUsers = userService.findAllUsers();
+        if(applicationUsers.isEmpty()){
+            return new ResponseEntity<List<ApplicationUser>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        return new ResponseEntity<List<ApplicationUser>>(applicationUsers, HttpStatus.OK);
     }
 
 
-    //-------------------Retrieve Single User--------------------------------------------------------
+    //-------------------Retrieve Single ApplicationUser--------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
-        System.out.println("Fetching User with id " + id);
-        User user = userService.findById(id);
-        if (user == null) {
-            System.out.println("User with id " + id + " not found");
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApplicationUser> getUser(@PathVariable("id") long id) {
+        System.out.println("Fetching ApplicationUser with id " + id);
+        ApplicationUser applicationUser = userService.findById(id);
+        if (applicationUser == null) {
+            System.out.println("ApplicationUser with id " + id + " not found");
+            return new ResponseEntity<ApplicationUser>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<ApplicationUser>(applicationUser, HttpStatus.OK);
     }
 
 
 
-    //-------------------Create a User--------------------------------------------------------
+    //-------------------Create a ApplicationUser--------------------------------------------------------
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Object> createUser(@RequestBody User user, WebRequest webRequest) {
-        if (userService.isUserExist(user)) {
-            System.out.println("A User with name " + user.getLogin() + " already exist");
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public ResponseEntity<Object> createUser(@RequestBody ApplicationUser applicationUser, WebRequest webRequest) {
+        //TODO: добавить другой способ обработки реквестов
+        if (userService.isUserExist(applicationUser)) {
+            System.out.println("A ApplicationUser with name " + applicationUser.getLogin() + " already exist");
             return restResponseEntityExceptionHandler.handleAlreadyExist(
-                new ExceptionMessage("A User with name " + user.getLogin() + " already exist"),
+                new ExceptionMessage("A ApplicationUser with name " + applicationUser.getLogin() + " already exist"),
                     webRequest
             );
         }
 
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        if (applicationUser.getPassword() == null){
+            return restResponseEntityExceptionHandler.handleBindException(
+                    new ExceptionMessage("Haven't password"),
+                    webRequest
+            );
+        }
+
+        applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
 
         try {
-            userService.saveUser(user);
-            return new ResponseEntity<Object>(user, new HttpHeaders(), HttpStatus.CREATED);
+            userService.saveUser(applicationUser);
+            return new ResponseEntity<Object>(applicationUser, new HttpHeaders(), HttpStatus.CREATED);
         }
         catch (Exception exception){
             System.out.println(exception);
@@ -96,43 +101,43 @@ public class UserCRUDController {
     }
 
 
-    //------------------- Update a User --------------------------------------------------------
+    //------------------- Update a ApplicationUser --------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-        System.out.println("Updating User " + id);
+    public ResponseEntity<ApplicationUser> updateUser(@PathVariable("id") long id, @RequestBody ApplicationUser applicationUser) {
+        System.out.println("Updating ApplicationUser " + id);
 
-        User currentUser = userService.findById(id);
+        ApplicationUser currentApplicationUser = userService.findById(id);
 
-        if (currentUser==null) {
-            System.out.println("User with id " + id + " not found");
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        if (currentApplicationUser ==null) {
+            System.out.println("ApplicationUser with id " + id + " not found");
+            return new ResponseEntity<ApplicationUser>(HttpStatus.NOT_FOUND);
         }
 
-        currentUser.setName(user.getName());
-        currentUser.setLastName(user.getLastName());
-        currentUser.setEmail(user.getEmail());
-        currentUser.setPassword(user.getPassword());
-        currentUser.setAffilation(user.getAffilation());
+        currentApplicationUser.setName(applicationUser.getName());
+        currentApplicationUser.setLastName(applicationUser.getLastName());
+        currentApplicationUser.setEmail(applicationUser.getEmail());
+        currentApplicationUser.setPassword(applicationUser.getPassword());
+        currentApplicationUser.setAffiliation(applicationUser.getAffiliation());
 
-        userService.updateUser(currentUser);
-        return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+        userService.updateUser(currentApplicationUser);
+        return new ResponseEntity<ApplicationUser>(currentApplicationUser, HttpStatus.OK);
     }
 
-    //------------------- Delete a User --------------------------------------------------------
+    //------------------- Delete a ApplicationUser --------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteUser(@PathVariable("id") long id) {
-        System.out.println("Fetching & Deleting User with id " + id);
+    public ResponseEntity<ApplicationUser> deleteUser(@PathVariable("id") long id) {
+        System.out.println("Fetching & Deleting ApplicationUser with id " + id);
 
-        User user = userService.findById(id);
-        if (user == null) {
-            System.out.println("Unable to delete. User with id " + id + " not found");
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        ApplicationUser applicationUser = userService.findById(id);
+        if (applicationUser == null) {
+            System.out.println("Unable to delete. ApplicationUser with id " + id + " not found");
+            return new ResponseEntity<ApplicationUser>(HttpStatus.NOT_FOUND);
         }
 
         userService.deleteUserById(id);
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<ApplicationUser>(HttpStatus.NO_CONTENT);
     }
 
 

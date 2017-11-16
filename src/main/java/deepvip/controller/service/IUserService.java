@@ -1,22 +1,22 @@
 package deepvip.controller.service;
 
-import deepvip.model.User;
+import deepvip.model.ApplicationUser;
 
 import java.util.List;
 
 public interface IUserService {
 
-    User findById(long id);
+    ApplicationUser findById(long id);
 
-    User findByName(String name);
+    ApplicationUser findByName(String name);
 
-    void saveUser(User user);
+    void saveUser(ApplicationUser applicationUser);
 
-    void updateUser(User user);
+    void updateUser(ApplicationUser applicationUser);
 
     void deleteUserById(long id);
 
-    List<User> findAllUsers();
+    List<ApplicationUser> findAllUsers();
 
-    boolean isUserExist(User user);
+    boolean isUserExist(ApplicationUser applicationUser);
 }

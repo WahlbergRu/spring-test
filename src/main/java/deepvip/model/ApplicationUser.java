@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class ApplicationUser {
 
     @Id
     @Column
@@ -38,19 +38,23 @@ public class User {
 
     @Column
     @Size(min=5, max=255)
-    private String affilation;
+    private String affiliation;
 
-    public User(){
+    public ApplicationUser(){
         id=0;
     }
 
-    public User(long id, String login, String name, String lastName, String email, String affilation){
+    public ApplicationUser(String login, String password){
+
+    }
+
+    public ApplicationUser(long id, String login, String name, String lastName, String email, String affiliation){
         this.id = id;
         this.login = login;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        this.affilation = affilation;
+        this.affiliation = affiliation;
     }
 
     public long getId() {
@@ -93,15 +97,13 @@ public class User {
         this.email = email;
     }
 
-    public String getAffilation() {
-        return this.affilation;
+    public String getAffiliation() {
+        return this.affiliation;
     }
 
-    public void setAffilation(String affilation) {
-        this.affilation = affilation;
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
     }
-
-
 
     public String getPassword() {
         return password;
@@ -110,28 +112,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        User other = (User) obj;
-        if (id != other.id)
-            return false;
-        return true;
-    }
-
 
 }
