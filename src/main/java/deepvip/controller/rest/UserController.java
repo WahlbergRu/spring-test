@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-public class UserCRUDController {
+public class UserController {
 
 
     @Autowired
@@ -32,9 +32,10 @@ public class UserCRUDController {
 
     private RestResponseEntityExceptionHandler restResponseEntityExceptionHandler;
 
-    public UserCRUDController(UserService userService,
-                              BCryptPasswordEncoder bCryptPasswordEncoder,
-                              RestResponseEntityExceptionHandler restResponseEntityExceptionHandler) {
+
+    public UserController(UserService userService,
+                          BCryptPasswordEncoder bCryptPasswordEncoder,
+                          RestResponseEntityExceptionHandler restResponseEntityExceptionHandler) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.restResponseEntityExceptionHandler = restResponseEntityExceptionHandler;

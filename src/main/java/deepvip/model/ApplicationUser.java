@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
@@ -13,7 +14,7 @@ public class ApplicationUser {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long userId;
 
     @Column(unique = true)
     @Size(min=2, max=30)
@@ -40,8 +41,12 @@ public class ApplicationUser {
     @Size(min=5, max=255)
     private String affiliation;
 
+    @Column
+    @OneToMany(mappedBy = "users")
+    private Set<UserPredictions> userPredictions;
+
     public ApplicationUser(){
-        id=0;
+        userId=0;
     }
 
     public ApplicationUser(String login, String password){
@@ -49,7 +54,7 @@ public class ApplicationUser {
     }
 
     public ApplicationUser(long id, String login, String name, String lastName, String email, String affiliation){
-        this.id = id;
+        this.userId = id;
         this.login = login;
         this.name = name;
         this.lastName = lastName;
@@ -58,11 +63,11 @@ public class ApplicationUser {
     }
 
     public long getId() {
-        return id;
+        return userId;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.userId = id;
     }
 
     public String getName() {
