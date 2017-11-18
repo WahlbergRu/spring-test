@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import deepvip.model.ApplicationUser;
-import deepvip.model.ApplicationUserRepository;
+import deepvip.repository.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,8 +30,6 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         ApplicationUser applicationUser = applicationUserRepository.findByLogin(login);
 
-
-
         if (applicationUser == null) {
             throw new UsernameNotFoundException(login);
         }
@@ -39,8 +37,6 @@ public class UserService implements UserDetailsService {
     }
 
     private static final AtomicLong counter = new AtomicLong();
-
-
 
     public List<ApplicationUser> findAllUsers() {
         return applicationUserRepository.findAll();
@@ -64,21 +60,15 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateUser(ApplicationUser applicationUser) {
-//        int index = users.indexOf(applicationUser);
-//        users.set(index, applicationUser);
+        applicationUserRepository.save(applicationUser);
     }
 
     public void deleteUserById(long id) {
-//        for (Iterator<ApplicationUser> iterator = users.iterator(); iterator.hasNext(); ) {
-//            ApplicationUser user = iterator.next();
-//            if (user.getId() == id) {
-//                iterator.remove();
-//            }
-//        }
+        applicationUserRepository.delete(id);
     }
 
     public boolean isUserExist(ApplicationUser applicationUser) {
-        return findByLogin(applicationUser.getLogin())!=null;
+        return findByLogin(applicationUser.getLogin()) != null;
     }
 
 }

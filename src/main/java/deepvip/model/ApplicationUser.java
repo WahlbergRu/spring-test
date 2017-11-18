@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class ApplicationUser {
 
     @Id
@@ -42,8 +42,8 @@ public class ApplicationUser {
     private String affiliation;
 
     @Column
-    @OneToMany(mappedBy = "users")
-    private Set<UserPredictions> userPredictions;
+    @OneToMany(mappedBy = "userPredictionId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UserPrediction> userPredictions;
 
     public ApplicationUser(){
         userId=0;

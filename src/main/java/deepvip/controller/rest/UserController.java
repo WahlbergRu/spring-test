@@ -118,8 +118,9 @@ public class UserController {
         currentApplicationUser.setName(applicationUser.getName());
         currentApplicationUser.setLastName(applicationUser.getLastName());
         currentApplicationUser.setEmail(applicationUser.getEmail());
-        currentApplicationUser.setPassword(applicationUser.getPassword());
         currentApplicationUser.setAffiliation(applicationUser.getAffiliation());
+
+        currentApplicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
 
         userService.updateUser(currentApplicationUser);
         return new ResponseEntity<ApplicationUser>(currentApplicationUser, HttpStatus.OK);
@@ -128,18 +129,19 @@ public class UserController {
     //------------------- Delete a ApplicationUser --------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<ApplicationUser> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
         System.out.println("Fetching & Deleting ApplicationUser with id " + id);
 
         ApplicationUser applicationUser = userService.findById(id);
         if (applicationUser == null) {
             System.out.println("Unable to delete. ApplicationUser with id " + id + " not found");
-            return new ResponseEntity<ApplicationUser>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
         }
 
         userService.deleteUserById(id);
-        return new ResponseEntity<ApplicationUser>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<String>("User has deleted", HttpStatus.NO_CONTENT);
     }
+
 
 
 }
