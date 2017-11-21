@@ -68,6 +68,19 @@ public class UserController {
 
 
 
+    //-------------------Retrieve Single ApplicationUser--------------------------------------------------------
+
+    @RequestMapping(value = "/current", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApplicationUser> getCurrentUser(@RequestBody ApplicationUser applicationUser) {
+        if (userService.isUserExist(applicationUser)) {
+            ApplicationUser currentApplicationUser = userService.findByLogin(applicationUser.getLogin());
+            return new ResponseEntity<ApplicationUser>(currentApplicationUser, HttpStatus.OK);
+        }
+        return new ResponseEntity<ApplicationUser>(HttpStatus.NOT_FOUND);
+    }
+
+
+
     //-------------------Create a ApplicationUser--------------------------------------------------------
 
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -83,8 +96,8 @@ public class UserController {
 
         if (applicationUser.getPassword() == null){
             return restResponseEntityExceptionHandler.handleBindException(
-                    new ExceptionMessage("Haven't password"),
-                    webRequest
+                new ExceptionMessage("Haven't password"),
+                webRequest
             );
         }
 

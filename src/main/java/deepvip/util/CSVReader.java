@@ -8,7 +8,7 @@ public class CSVReader {
 
     public static void main(String[] args) {
 
-        String csvFile = "/assets/output.csv";
+        String csvFile = "/assets/JobNumber_v2.csv";
         String line = "";
         String cvsSplitBy = ",";
 
@@ -19,7 +19,7 @@ public class CSVReader {
                 // use comma as separator
                 String[] country = line.split(cvsSplitBy);
 
-                System.out.println("Country [code= " + country[4] + " , name=" + country[5] + "]");
+                System.out.println("[UniProt= " + country[0] + " , Gene=" + country[1] + "]");
 
             }
 

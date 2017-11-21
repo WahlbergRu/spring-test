@@ -106,7 +106,6 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1206-jdbc42</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -114,6 +113,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+
+				<configuration>
+					<wait>10000</wait>
+					<maxAttempts>3000</maxAttempts>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

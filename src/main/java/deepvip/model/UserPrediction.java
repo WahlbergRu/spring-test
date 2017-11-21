@@ -24,7 +24,23 @@ public class UserPrediction {
 
     @Column
     @NotEmpty
-    private String Public;
+    private String PublicPrediction;
+
+    @Column(columnDefinition="TEXT")
+    @NotEmpty
+    private String ViralProtein;
+
+    @Column(columnDefinition="TEXT")
+    @NotEmpty
+    private String HumanInteraction;
+
+    @Column
+    @NotEmpty
+    private String Title;
+
+    @Column
+    @NotEmpty
+    private String Description;
 
     @Column
     @NotEmpty
@@ -32,11 +48,7 @@ public class UserPrediction {
 
     @Column
     @NotEmpty
-    private String ViralProtein;
-
-    @Column
-    @NotEmpty
-    private String HumanInteractionPartners;
+    private String SendResult;
 
     public long getUserPredictionId() {
         return userPredictionId;
@@ -62,12 +74,12 @@ public class UserPrediction {
         this.userPrediction = userPrediction;
     }
 
-    public String getPublic() {
-        return Public;
+    public String getPublicPrediction() {
+        return PublicPrediction;
     }
 
-    public void setPublic(String aPublic) {
-        Public = aPublic;
+    public void setPublicPrediction(String publicPrediction) {
+        PublicPrediction = publicPrediction;
     }
 
     public String getStatus() {
@@ -86,11 +98,35 @@ public class UserPrediction {
         ViralProtein = viralProtein;
     }
 
-    public String getHumanInteractionPartners() {
-        return HumanInteractionPartners;
+    public String getHumanInteraction() {
+        return HumanInteraction;
     }
 
-    public void setHumanInteractionPartners(String humanInteractionPartners) {
-        HumanInteractionPartners = humanInteractionPartners;
+    public void setHumanInteraction(String humanInteraction) {
+        HumanInteraction = humanInteraction;
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public String getSendResult() {
+        return SendResult;
+    }
+
+    public void setSendResult(String sendResult) {
+        SendResult = sendResult;
     }
 }

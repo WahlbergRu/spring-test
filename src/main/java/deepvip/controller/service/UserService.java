@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import deepvip.model.ApplicationUser;
 import deepvip.repository.ApplicationUserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.WebRequest;
 
+import static deepvip.controller.security.SecurityConstants.HEADER_STRING;
+import static deepvip.controller.security.SecurityConstants.SECRET;
+import static deepvip.controller.security.SecurityConstants.TOKEN_PREFIX;
 import static java.util.Collections.emptyList;
 
 @Service("userService")
@@ -51,6 +57,16 @@ public class UserService implements UserDetailsService {
     }
 
     public ApplicationUser findByLogin(String login) {
+        return applicationUserRepository.findByLogin(login);
+    }
+
+    public ApplicationUser findByJWT(WebRequest webRequest) {
+        String jwt = webRequest.getHeader(HEADER_STRING);
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET.getBytes())
+                .parseClaimsJws(jwt.replace(TOKEN_PREFIX, ""))
+                .getBody();
+        String login = claims.getSubject();
         return applicationUserRepository.findByLogin(login);
     }
 
