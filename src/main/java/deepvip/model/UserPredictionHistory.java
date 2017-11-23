@@ -6,91 +6,93 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "USER_PREDICTION_HISTORY")
+@Table(name = "user_prediction_history")
 public class UserPredictionHistory {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userPredictionHistoryId;
+    @GeneratedValue
+    private long Id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_predictions_id", nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="Id", updatable = false, insertable = false)
     private UserPrediction userPrediction;
 
     @Column
-    @NotEmpty
     private Number PredictionSpecificity;
 
     @Column
-    @NotEmpty
     private Number PredictionSensitivity;
 
     @Column
-    @NotEmpty
     private Number PredictionConfidence;
 
     @Column
-    @NotEmpty
     private Number FilterHumanSpecificity;
 
     @Column
-    @NotEmpty
     private Number FilterHumanSensitivity;
 
-    public long getUserPredictionHistoryId() {
-        return userPredictionHistoryId;
+    public long getId() {
+        return Id;
     }
 
-    public void setUserPredictionHistoryId(long userPredictionHistoryId) {
-        this.userPredictionHistoryId = userPredictionHistoryId;
+    public UserPredictionHistory setId(long id) {
+        Id = id;
+        return this;
     }
 
     public UserPrediction getUserPrediction() {
         return userPrediction;
     }
 
-    public void setUserPrediction(UserPrediction userPrediction) {
+    public UserPredictionHistory setUserPrediction(UserPrediction userPrediction) {
         this.userPrediction = userPrediction;
+        return this;
     }
 
     public Number getPredictionSpecificity() {
         return PredictionSpecificity;
     }
 
-    public void setPredictionSpecificity(Number predictionSpecificity) {
+    public UserPredictionHistory setPredictionSpecificity(Number predictionSpecificity) {
         PredictionSpecificity = predictionSpecificity;
+        return this;
     }
 
     public Number getPredictionSensitivity() {
         return PredictionSensitivity;
     }
 
-    public void setPredictionSensitivity(Number predictionSensitivity) {
+    public UserPredictionHistory setPredictionSensitivity(Number predictionSensitivity) {
         PredictionSensitivity = predictionSensitivity;
+        return this;
     }
 
     public Number getPredictionConfidence() {
         return PredictionConfidence;
     }
 
-    public void setPredictionConfidence(Number predictionConfidence) {
+    public UserPredictionHistory setPredictionConfidence(Number predictionConfidence) {
         PredictionConfidence = predictionConfidence;
+        return this;
     }
 
     public Number getFilterHumanSpecificity() {
         return FilterHumanSpecificity;
     }
 
-    public void setFilterHumanSpecificity(Number filterHumanSpecificity) {
+    public UserPredictionHistory setFilterHumanSpecificity(Number filterHumanSpecificity) {
         FilterHumanSpecificity = filterHumanSpecificity;
+        return this;
     }
 
     public Number getFilterHumanSensitivity() {
         return FilterHumanSensitivity;
     }
 
-    public void setFilterHumanSensitivity(Number filterHumanSensitivity) {
+    public UserPredictionHistory setFilterHumanSensitivity(Number filterHumanSensitivity) {
         FilterHumanSensitivity = filterHumanSensitivity;
+        return this;
     }
 }

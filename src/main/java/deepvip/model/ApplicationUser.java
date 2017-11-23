@@ -11,10 +11,9 @@ import java.util.Set;
 @Table(name = "users")
 public class ApplicationUser {
 
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private long Id;
+
+    private Set<UserPrediction> userPrediction;
 
     @Column(unique = true)
     @Size(min=2, max=30)
@@ -41,20 +40,22 @@ public class ApplicationUser {
     @Size(min=5, max=255)
     private String affiliation;
 
-    @Column
-    @OneToMany(mappedBy = "userPredictionId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<UserPrediction> userPredictions;
-
-    public ApplicationUser(){
-        userId=0;
+    public Set<UserPrediction> getUserPrediction() {
+        return userPrediction;
     }
 
-    public ApplicationUser(String login, String password){
+    @Column
+    @OneToMany(mappedBy = "Id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public ApplicationUser setUserPrediction(Set<UserPrediction> userPrediction) {
+        this.userPrediction = userPrediction;
+        return this;
+    }
 
+    public ApplicationUser(){
     }
 
     public ApplicationUser(long id, String login, String name, String lastName, String email, String affiliation){
-        this.userId = id;
+        this.Id = id;
         this.login = login;
         this.name = name;
         this.lastName = lastName;
@@ -62,60 +63,69 @@ public class ApplicationUser {
         this.affiliation = affiliation;
     }
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
-        return userId;
+        return Id;
     }
 
-    public void setId(long id) {
-        this.userId = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public ApplicationUser setId(long id) {
+        Id = id;
+        return this;
     }
 
     public String getLogin() {
         return login;
     }
 
-    public void setLogin(String login) {
+    public ApplicationUser setLogin(String login) {
         this.login = login;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ApplicationUser setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public String getLastName() {
-        return this.lastName;
+        return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public ApplicationUser setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
-    public void setEmail(String email) {
+    public ApplicationUser setEmail(String email) {
         this.email = email;
-    }
-
-    public String getAffiliation() {
-        return this.affiliation;
-    }
-
-    public void setAffiliation(String affiliation) {
-        this.affiliation = affiliation;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public ApplicationUser setPassword(String password) {
         this.password = password;
+        return this;
     }
 
+    public String getAffiliation() {
+        return affiliation;
+    }
+
+    public ApplicationUser setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+        return this;
+    }
 }

@@ -10,13 +10,8 @@ import java.util.Set;
 @Table(name = "USER_PREDICTION_TABLE")
 public class UserPredictionTable {
 
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userPredictionTableId;
+    private long Id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_prediction_id", nullable=false)
     private UserPrediction userPrediction;
 
     @Column
@@ -39,14 +34,20 @@ public class UserPredictionTable {
     @NotEmpty
     private Number Specificity;
 
-    public long getUserPredictionTableId() {
-        return userPredictionTableId;
+    @Id
+    @Column
+    @GeneratedValue
+    public long getId() {
+        return Id;
     }
 
-    public void setUserPredictionTableId(long userPredictionTableId) {
-        this.userPredictionTableId = userPredictionTableId;
+    public UserPredictionTable setId(long id) {
+        Id = id;
+        return this;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_prediction_id")
     public UserPrediction getUserPrediction() {
         return userPrediction;
     }

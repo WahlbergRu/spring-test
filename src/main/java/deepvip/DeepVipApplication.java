@@ -17,9 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.Entity;
 
 @SpringBootApplication
-@ComponentScan({"deepvip.controller"})
-@EntityScan("deepvip.model")
-@EnableJpaRepositories("deepvip.repository")
 public class DeepVipApplication {
 
 	public static void main(String[] args) {

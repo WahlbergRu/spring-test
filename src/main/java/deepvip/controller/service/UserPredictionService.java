@@ -2,12 +2,17 @@ package deepvip.controller.service;
 
 import deepvip.model.ApplicationUser;
 import deepvip.model.UserPrediction;
+import deepvip.model.UserPredictionHistory;
 import deepvip.repository.UserPredictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLData;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service("userPredictionService")
@@ -27,7 +32,7 @@ public class UserPredictionService {
         return userPredictionRepository.findAll();
     }
 
-    public List<UserPrediction> findByUserId(ApplicationUser applicationUser){
+    public List<UserPrediction> findByUserId(ApplicationUser applicationUser) {
         return userPredictionRepository.findByApplicationUser(applicationUser);
     }
 
@@ -36,7 +41,6 @@ public class UserPredictionService {
     }
 
     public void save(UserPrediction userPrediction) {
-        userPrediction.setUserPredictionId(counter.incrementAndGet());
         userPredictionRepository.save(userPrediction);
     }
 

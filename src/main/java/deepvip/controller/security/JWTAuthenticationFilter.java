@@ -90,9 +90,4 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         httpServletResponse.getWriter().flush();
         httpServletResponse.getWriter().close();
     }
-
-    //Sample method to validate and read the JWT
-    private void parseJWT(String jwt) {
-        //This line will throw an exception if it is not a signed JWS (as expected)
-    }
 }

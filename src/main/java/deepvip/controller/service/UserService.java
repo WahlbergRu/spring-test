@@ -1,5 +1,6 @@
 package deepvip.controller.service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -71,7 +72,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void saveUser(ApplicationUser applicationUser) {
-        applicationUser.setId(counter.incrementAndGet());
         applicationUserRepository.save(applicationUser);
     }
 

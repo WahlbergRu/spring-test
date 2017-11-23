@@ -3,10 +3,15 @@ package deepvip.controller.service;
 import deepvip.model.UserPredictionHistory;
 import deepvip.repository.UserPredictionHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Service("userPredictionHistoryService")
+@Transactional
 public class UserPredictionHistoryService {
 
     @Autowired
@@ -27,7 +32,6 @@ public class UserPredictionHistoryService {
     }
 
     public void save(UserPredictionHistory userPredictionHistory) {
-        userPredictionHistory.setUserPredictionHistoryId(counter.incrementAndGet());
         userPredictionHistoryRepository.save(userPredictionHistory);
     }
 
