@@ -1,5 +1,6 @@
 package deepvip.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -9,18 +10,18 @@ import java.util.Set;
 @Table(name = "user_prediction")
 public class UserPrediction {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
 
-    private Set<UserPredictionHistory> userPredictionHistory;
-
-    @Column
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="Id", updatable = false, insertable = false)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="users_id")
     private ApplicationUser applicationUser;
 
     @Column
-    @NotEmpty
-    private String PublicPrediction;
+    private Boolean PublicPrediction;
 
     @Column(columnDefinition="VARCHAR")
     @NotEmpty
@@ -43,12 +44,8 @@ public class UserPrediction {
     private String Status;
 
     @Column
-    @NotEmpty
-    private String SendResult;
+    private Boolean SendResult;
 
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return Id;
     }
@@ -56,12 +53,6 @@ public class UserPrediction {
     public UserPrediction setId(long id) {
         Id = id;
         return this;
-    }
-
-    @Column
-    @OneToMany(mappedBy = "Id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public Set<UserPredictionHistory> getUserPredictionHistory() {
-        return userPredictionHistory;
     }
 
     public ApplicationUser getApplicationUser() {
@@ -73,16 +64,11 @@ public class UserPrediction {
         return this;
     }
 
-    public UserPrediction setUserPredictionHistory(Set<UserPredictionHistory> userPredictionHistory) {
-        this.userPredictionHistory = userPredictionHistory;
-        return this;
-    }
-
-    public String getPublicPrediction() {
+    public Boolean getPublicPrediction() {
         return PublicPrediction;
     }
 
-    public UserPrediction setPublicPrediction(String publicPrediction) {
+    public UserPrediction setPublicPrediction(Boolean publicPrediction) {
         PublicPrediction = publicPrediction;
         return this;
     }
@@ -132,11 +118,11 @@ public class UserPrediction {
         return this;
     }
 
-    public String getSendResult() {
+    public Boolean getSendResult() {
         return SendResult;
     }
 
-    public UserPrediction setSendResult(String sendResult) {
+    public UserPrediction setSendResult(Boolean sendResult) {
         SendResult = sendResult;
         return this;
     }

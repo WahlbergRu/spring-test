@@ -1,5 +1,6 @@
 package deepvip.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -11,11 +12,12 @@ public class UserPredictionHistory {
 
     @Id
     @Column
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="Id", updatable = false, insertable = false)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="user_prediction_id")
     private UserPrediction userPrediction;
 
     @Column

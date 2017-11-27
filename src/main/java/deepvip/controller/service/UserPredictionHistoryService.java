@@ -1,5 +1,6 @@
 package deepvip.controller.service;
 
+import deepvip.model.UserPrediction;
 import deepvip.model.UserPredictionHistory;
 import deepvip.repository.UserPredictionHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class UserPredictionHistoryService {
 
     public UserPredictionHistory findById(long id) {
         return userPredictionHistoryRepository.findOne(id);
+    }
+
+    public List<UserPredictionHistory> findByUserPrediction(UserPrediction userPrediction) {
+        return userPredictionHistoryRepository.findByUserPrediction(userPrediction);
     }
 
     public void save(UserPredictionHistory userPredictionHistory) {

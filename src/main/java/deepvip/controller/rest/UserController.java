@@ -70,8 +70,10 @@ public class UserController {
 
     //-------------------Retrieve Single ApplicationUser--------------------------------------------------------
 
-    @RequestMapping(value = "/current", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApplicationUser> getCurrentUser(@RequestBody ApplicationUser applicationUser) {
+    @RequestMapping(value = "/current", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApplicationUser> getCurrentUser(WebRequest webRequest) {
+        ApplicationUser applicationUser = userService.findByJWT(webRequest);
+
         if (userService.isUserExist(applicationUser)) {
             ApplicationUser currentApplicationUser = userService.findByLogin(applicationUser.getLogin());
             return new ResponseEntity<ApplicationUser>(currentApplicationUser, HttpStatus.OK);

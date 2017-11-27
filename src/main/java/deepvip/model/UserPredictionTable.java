@@ -1,98 +1,107 @@
 package deepvip.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Entity
 @Table(name = "USER_PREDICTION_TABLE")
 public class UserPredictionTable {
 
-    private long Id;
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userPredictionTableId;
 
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_prediction_id")
     private UserPrediction userPrediction;
 
     @Column
     @NotEmpty
-    private Number GeneName;
+    private ArrayList<String> GeneName;
 
     @Column
     @NotEmpty
-    private String UniProtID;
+    private ArrayList<String> UniProtID;
 
     @Column
     @NotEmpty
-    private Number Confidence;
+    private ArrayList<Number> Confidence;
 
     @Column
     @NotEmpty
-    private Number Sensitivity;
+    private ArrayList<Number> Sensitivity;
 
     @Column
     @NotEmpty
-    private Number Specificity;
+    private ArrayList<Number> Specificity;
 
-    @Id
-    @Column
-    @GeneratedValue
-    public long getId() {
-        return Id;
+    public long getUserPredictionTableId() {
+        return userPredictionTableId;
     }
 
-    public UserPredictionTable setId(long id) {
-        Id = id;
+    public UserPredictionTable setUserPredictionTableId(long userPredictionTableId) {
+        this.userPredictionTableId = userPredictionTableId;
         return this;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_prediction_id")
     public UserPrediction getUserPrediction() {
         return userPrediction;
     }
 
-    public void setUserPrediction(UserPrediction userPrediction) {
+    public UserPredictionTable setUserPrediction(UserPrediction userPrediction) {
         this.userPrediction = userPrediction;
+        return this;
     }
 
-    public Number getGeneName() {
+    public ArrayList<String> getGeneName() {
         return GeneName;
     }
 
-    public void setGeneName(Number geneName) {
+    public UserPredictionTable setGeneName(ArrayList<String> geneName) {
         GeneName = geneName;
+        return this;
     }
 
-    public String getUniProtID() {
+    public ArrayList<String> getUniProtID() {
         return UniProtID;
     }
 
-    public void setUniProtID(String uniProtID) {
+    public UserPredictionTable setUniProtID(ArrayList<String> uniProtID) {
         UniProtID = uniProtID;
+        return this;
     }
 
-    public Number getConfidence() {
+    public ArrayList<Number> getConfidence() {
         return Confidence;
     }
 
-    public void setConfidence(Number confidence) {
+    public UserPredictionTable setConfidence(ArrayList<Number> confidence) {
         Confidence = confidence;
+        return this;
     }
 
-    public Number getSensitivity() {
+    public ArrayList<Number> getSensitivity() {
         return Sensitivity;
     }
 
-    public void setSensitivity(Number sensitivity) {
+    public UserPredictionTable setSensitivity(ArrayList<Number> sensitivity) {
         Sensitivity = sensitivity;
+        return this;
     }
 
-    public Number getSpecificity() {
+    public ArrayList<Number> getSpecificity() {
         return Specificity;
     }
 
-    public void setSpecificity(Number specificity) {
+    public UserPredictionTable setSpecificity(ArrayList<Number> specificity) {
         Specificity = specificity;
+        return this;
     }
 }

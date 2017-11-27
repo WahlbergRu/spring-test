@@ -11,9 +11,10 @@ import java.util.Set;
 @Table(name = "users")
 public class ApplicationUser {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
-
-    private Set<UserPrediction> userPrediction;
 
     @Column(unique = true)
     @Size(min=2, max=30)
@@ -40,32 +41,6 @@ public class ApplicationUser {
     @Size(min=5, max=255)
     private String affiliation;
 
-    public Set<UserPrediction> getUserPrediction() {
-        return userPrediction;
-    }
-
-    @Column
-    @OneToMany(mappedBy = "Id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public ApplicationUser setUserPrediction(Set<UserPrediction> userPrediction) {
-        this.userPrediction = userPrediction;
-        return this;
-    }
-
-    public ApplicationUser(){
-    }
-
-    public ApplicationUser(long id, String login, String name, String lastName, String email, String affiliation){
-        this.Id = id;
-        this.login = login;
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.affiliation = affiliation;
-    }
-
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return Id;
     }
